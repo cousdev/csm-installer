@@ -1,5 +1,10 @@
 # Cous Script Manager Installer
 CSMI provides an easy way to install and setup Cous Script Manager, at scale.
-The latest tagged version of the `cous-script-manager` repository is compiled then released here.
 
-It also contains `install.sh` to install the latest `cous-script-manager`, move it to `/tmp`, and add it to the `$PATH`.
+## Installation
+The recommended way to install CSM is through running:
+```bash
+curl -fsSL https://raw.githubusercontent.com/cousdev/csm-installer/main/install.sh | bash
+```
+
+Alternatively, you can find compiled binaries in the Releases tab, ensure you install them in a compatible place, such as `/tmp` or in the user's `Application Support`.
