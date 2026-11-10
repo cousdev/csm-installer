@@ -6,11 +6,23 @@ APP_NAME="CSM"
 INSTALL_DIR="/private/tmp/cous"
 REPO="cousdev/csm-installer"
 
-# Make it so that VERSION dynamically resolves eventually.
-VERSION="v1.0.2"
+LATEST_URL="https://github.com/$REPO/releases/latest"
+
+echo "[INFO] Checking latest version..."
+
+VERSION=$(curl -fsSI "$LATEST_URL" \
+    | awk 'BEGIN {IGNORECASE=1} /^location:/ {print $2}' \
+    | tr -d '\r' \
+    | sed 's|.*/tag/||')
+
+if [[ -z "$VERSION" ]]; then
+    echo "[ERROR] Could not determine latest version."
+    exit 1
+fi
 
 DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$APP_NAME"
 
+echo "[INFO] Latest version: $VERSION"
 echo "[INFO] Downloading $APP_NAME..."
 
 mkdir -p "$INSTALL_DIR"
@@ -24,6 +36,6 @@ if ! grep -qF "$INSTALL_DIR" "$HOME/.zshrc" 2>/dev/null; then
     echo 'export PATH="/private/tmp/cous:$PATH"' >> "$HOME/.zshrc"
 fi
 
-echo "[SUCCESS] Installation complete!"
+echo "[SUCCESS] Installed $APP_NAME ($VERSION)!"
 echo "Run: $APP_NAME"
 echo "You may need to restart your terminal."
