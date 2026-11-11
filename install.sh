@@ -3,8 +3,11 @@
 set -euo pipefail
 
 APP_NAME="CSM"
-INSTALL_DIR="$HOME/Library/Application Support"
+INSTALL_DIR="$HOME/Library/Application Support/cous"
 REPO="cousdev/csm-installer"
+
+BINARY_PATH="$INSTALL_DIR/$APP_NAME"
+ZSHRC="$HOME/.zshrc"
 
 LATEST_URL="https://github.com/$REPO/releases/latest"
 
@@ -27,16 +30,21 @@ echo "[INFO] Downloading $APP_NAME..."
 
 mkdir -p "$INSTALL_DIR"
 
-curl -fsSL "$DOWNLOAD_URL" \
-    -o "$INSTALL_DIR/$APP_NAME"
+curl -fsSL "$DOWNLOAD_URL" -o "$BINARY_PATH"
+chmod 755 "$BINARY_PATH"
 
-chmod 755 "$INSTALL_DIR/$APP_NAME"
+if [[ -f "$BINARY_PATH" ]]; then
+    echo "[INFO] Binary installed at $BINARY_PATH"
+fi
 
-if ! grep -qF "$INSTALL_DIR" "$HOME/.zshrc" 2>/dev/null; then
-    echo "export PATH=\"$INSTALL_DIR/cous:\$PATH\"" >> "$HOME/.zshrc"
+# Only configure PATH on a fresh installation
+if ! grep -qF "$INSTALL_DIR" "$ZSHRC" 2>/dev/null; then
+    echo "export PATH=\"$INSTALL_DIR:\$PATH\"" >> "$ZSHRC"
+    echo "[INFO] Added installation directory to PATH."
+else
+    echo "[INFO] PATH already configured. Skipping."
 fi
 
 echo "[SUCCESS] Installed $APP_NAME ($VERSION)!"
 echo "Run: $APP_NAME"
-echo "You need to restart your terminal for changes to take effect. Run:"
-echo "source ~/.zshrc"
+echo "Restart your terminal or run: source ~/.zshrc"
