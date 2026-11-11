@@ -3,7 +3,7 @@
 set -euo pipefail
 
 APP_NAME="CSM"
-INSTALL_DIR="/private/tmp/cous"
+INSTALL_DIR="$HOME/Library/Application Support"
 REPO="cousdev/csm-installer"
 
 LATEST_URL="https://github.com/$REPO/releases/latest"
@@ -33,9 +33,10 @@ curl -fsSL "$DOWNLOAD_URL" \
 chmod 755 "$INSTALL_DIR/$APP_NAME"
 
 if ! grep -qF "$INSTALL_DIR" "$HOME/.zshrc" 2>/dev/null; then
-    echo 'export PATH="/private/tmp/cous:$PATH"' >> "$HOME/.zshrc"
+    echo "export PATH=\"$INSTALL_DIR/cous:\$PATH\"" >> "$HOME/.zshrc"
 fi
 
 echo "[SUCCESS] Installed $APP_NAME ($VERSION)!"
 echo "Run: $APP_NAME"
-echo "You may need to restart your terminal."
+echo "You need to restart your terminal for changes to take effect. Run:"
+echo "source ~/.zshrc"
